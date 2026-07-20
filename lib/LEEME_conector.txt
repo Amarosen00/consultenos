@@ -1,0 +1,37 @@
+========================================================================
+  CONECTOR JDBC — INSTRUCCIONES IMPORTANTES
+========================================================================
+
+El proyecto ya está configurado para buscar el conector en esta carpeta
+con el nombre exacto:
+
+        mysql-connector-j.jar
+
+PASOS:
+
+1. Descargar el conector desde:
+   https://dev.mysql.com/downloads/connector/j/
+   -> Elegir "Platform Independent" y bajar el ZIP.
+   -> En la pantalla de login, hacer clic en
+      "No thanks, just start my download".
+
+2. Descomprimir el ZIP. Adentro hay un archivo llamado algo como:
+        mysql-connector-j-9.1.0.jar
+   (el número de versión puede variar)
+
+3. Copiar ese archivo a ESTA carpeta (lib) y RENOMBRARLO exactamente a:
+        mysql-connector-j.jar
+
+   ¡El nombre debe quedar sin el número de versión!
+   Así el proyecto lo encuentra sin importar la versión que descarguen.
+
+4. En NetBeans: clic derecho en el proyecto -> "Clean and Build".
+   Luego abrir src/util/Conexion.java y "Run File".
+   Debe aparecer: CONEXION EXITOSA
+
+------------------------------------------------------------------------
+Si prefieren no renombrar el archivo:
+  - Clic derecho en el proyecto -> Properties -> Libraries
+  - Quitar la referencia rota y usar "Add JAR/Folder" para agregar
+    el .jar con el nombre que tenga.
+========================================================================

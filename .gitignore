@@ -1,0 +1,47 @@
+# ============================================================
+#  .gitignore  -  Proyecto Consultenos (Java + NetBeans)
+#
+#  Este archivo le dice a Git que NO suba ciertos archivos.
+#  Motivo: los archivos compilados y las configuraciones locales
+#  cambian en cada computador y generan conflictos absurdos
+#  entre los integrantes del equipo.
+# ============================================================
+
+# --- Archivos compilados de Java ---
+# Son generados automaticamente al compilar; no tiene sentido versionarlos.
+*.class
+*.jar
+!lib/*.jar
+*.war
+
+# --- Carpetas de compilacion de NetBeans ---
+build/
+dist/
+nbbuild/
+nbdist/
+.nb-gradle/
+
+# --- Configuracion local de NetBeans ---
+# Contiene rutas absolutas del computador de cada uno (C:\Users\...).
+# Si se sube, al companero le rompe el proyecto.
+nbproject/private/
+nbproject/Package-Profile.xml
+
+# --- Configuracion de otros IDEs ---
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# --- Sistema operativo ---
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# --- Archivos temporales ---
+*.log
+*.tmp
+*.bak
+*~
