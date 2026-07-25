@@ -24,15 +24,20 @@ import modelo.Empleado;
  *   - Tecnico:        Mis Tickets Asignados (bandeja propia, no el listado general).
  *   - Administrador:  lo del Supervisor + Gestion de Personal (SOLO LECTURA).
  *
- * De las pantallas anteriores, solo "Ver Tickets" (ListadoTickets, hoy
- * limitado a Abierto/En progreso) y "Gestion de Personal" estan conectadas
- * de verdad. El resto son botones "(Proximamente)" porque esas pantallas
- * todavia no existen.
+ * "Ver Tickets" y "Mis Tickets Asignados" abren la MISMA pantalla
+ * (ListadoTickets), que internamente se adapta segun el rol: para Tecnico
+ * se autofiltra a sus propios tickets asignados; para los demas roles
+ * muestra el listado general con filtros (HU-08/16/06/07).
  *
- * "Historial" (busqueda sobre Historial_Ticket) es funcionalidad EXTRA, no
- * comprometida en las 12 HU del documento (esa tabla es HU-13, fuera de
- * alcance). Se mantiene por decision explicita del usuario, visible solo
- * para Supervisor y Administrador.
+ * "Registrar Ticket" (RegistroTicket), "Asignacion de Tecnicos"
+ * (AsignacionTicket), "Reportes de Gestion" (Reportes) y "Gestion de
+ * Personal" tambien estan conectadas. Con esto las 7 pantallas de
+ * docs/IMPLEMENTACION.md quedan construidas.
+ *
+ * "Historial" y "Tickets Activos" (extra) son funcionalidad ADICIONAL, no
+ * comprometida en las 12 HU del documento (equivalen a HU-13). Se
+ * mantienen por decision explicita del usuario, visibles solo para
+ * Supervisor y Administrador, y claramente rotuladas como extra.
  */
 public class MenuPrincipal extends JFrame {
 
@@ -75,22 +80,21 @@ public class MenuPrincipal extends JFrame {
 
         // Agente, Supervisor y Administrador comparten Registrar + Ver Tickets.
         if (rol.equals(ROL_AGENTE) || rol.equals(ROL_SUPERVISOR) || rol.equals(ROL_ADMINISTRADOR)) {
-            panelOpciones.add(crearBotonProximamente("Registrar Ticket"));
+            panelOpciones.add(botonRegistrarTicket());
             panelOpciones.add(botonVerTickets());
         }
 
         // Tecnico solo ve su propia bandeja (no el listado general).
         if (rol.equals(ROL_TECNICO)) {
-            JButton btnMisTickets = crearBotonProximamente("Mis Tickets Asignados");
-            btnMisTickets.setToolTipText("Requiere TicketDAO.listarPorTecnico() (Prioridad 2, aun no construido).");
-            panelOpciones.add(btnMisTickets);
+            panelOpciones.add(botonMisTicketsAsignados());
         }
 
         // Supervisor y Administrador suman Asignacion y Reportes.
         if (rol.equals(ROL_SUPERVISOR) || rol.equals(ROL_ADMINISTRADOR)) {
-            panelOpciones.add(crearBotonProximamente("Asignacion de Tecnicos"));
-            panelOpciones.add(crearBotonProximamente("Reportes de Gestion"));
+            panelOpciones.add(botonAsignacion());
+            panelOpciones.add(botonReportes());
             panelOpciones.add(botonHistorialExtra());
+            panelOpciones.add(botonTicketsActivosExtra());
         }
 
         // Administrador suma Gestion de Personal (solo lectura).
@@ -110,11 +114,35 @@ public class MenuPrincipal extends JFrame {
         add(panelInferior, BorderLayout.SOUTH);
     }
 
+    private JButton botonRegistrarTicket() {
+        JButton boton = new JButton("Registrar Ticket");
+        boton.addActionListener(e -> new RegistroTicket(empleadoLogueado.getIdEmpleado()).setVisible(true));
+        return boton;
+    }
+
     private JButton botonVerTickets() {
         JButton boton = new JButton("Ver Tickets");
-        boton.setToolTipText("Hoy muestra solo Abierto/En progreso. Pendiente ampliar a HU-08/16/06/07"
-                + " (todos los estados + filtros por prioridad, cliente y dispositivo).");
-        boton.addActionListener(e -> new ListadoTickets(empleadoLogueado.getIdEmpleado()).setVisible(true));
+        boton.addActionListener(e -> new ListadoTickets(
+                empleadoLogueado.getIdEmpleado(), empleadoLogueado.getNombreRol()).setVisible(true));
+        return boton;
+    }
+
+    private JButton botonMisTicketsAsignados() {
+        JButton boton = new JButton("Mis Tickets Asignados");
+        boton.addActionListener(e -> new ListadoTickets(
+                empleadoLogueado.getIdEmpleado(), empleadoLogueado.getNombreRol()).setVisible(true));
+        return boton;
+    }
+
+    private JButton botonAsignacion() {
+        JButton boton = new JButton("Asignacion de Tecnicos");
+        boton.addActionListener(e -> new AsignacionTicket().setVisible(true));
+        return boton;
+    }
+
+    private JButton botonReportes() {
+        JButton boton = new JButton("Reportes de Gestion");
+        boton.addActionListener(e -> new Reportes().setVisible(true));
         return boton;
     }
 
@@ -123,6 +151,14 @@ public class MenuPrincipal extends JFrame {
         boton.setToolTipText("Busqueda sobre Historial_Ticket. No es parte de las 12 HU comprometidas"
                 + " en docs/IMPLEMENTACION.md (equivale a HU-13); se mantiene como funcionalidad adicional.");
         boton.addActionListener(e -> new Historial().setVisible(true));
+        return boton;
+    }
+
+    private JButton botonTicketsActivosExtra() {
+        JButton boton = new JButton("Tickets Activos (extra, fuera de las 12 HU)");
+        boton.setToolTipText("Listado activos + cambio de estado inline con auto-registro en Historial_Ticket."
+                + " No es parte de las 12 HU comprometidas (equivale a HU-13); se mantiene como funcionalidad adicional.");
+        boton.addActionListener(e -> new ListadoActivosExtra(empleadoLogueado.getIdEmpleado()).setVisible(true));
         return boton;
     }
 

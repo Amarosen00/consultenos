@@ -274,17 +274,27 @@ public class TicketDAO {
         return lista;
     }
 
-    /** HU-07: historial completo de fallas de un equipo, por numero de serie. */
+    /**
+     * HU-07: historial completo de fallas de un equipo, por numero de serie.
+     * Trae las mismas columnas "generales" que listar()/listarPorCliente()
+     * (prioridad, reporta, sucursal, tecnico) para que vista/ListadoTickets.java
+     * pueda mostrar una sola tabla sin importar cual filtro este activo.
+     */
     public List<Ticket> listarPorDispositivo(String numeroSerie) {
         List<Ticket> lista = new ArrayList<>();
 
-        String sql = "SELECT t.id_ticket, t.id_estado, t.fecha_hora_creacion, t.fecha_hora_cierre, "
+        String sql = "SELECT t.id_ticket, t.id_estado, t.fecha_hora_creacion, t.fecha_hora_cierre, t.prioridad, "
                    + "       a.nombre_ambito, t.naturaleza, est.nombre_estado, "
+                   + "       u.nombre_completo AS reporta, s.nombre_sucursal, "
+                   + "       COALESCE(tec.nombre_completo, 'Sin asignar') AS tecnico, "
                    + "       t.descripcion_problema, t.comentario_resolucion "
                    + "FROM Ticket t "
-                   + "INNER JOIN Dispositivo   d   ON t.id_dispositivo = d.id_dispositivo "
-                   + "INNER JOIN Ambito        a   ON t.id_ambito      = a.id_ambito "
-                   + "INNER JOIN Estado_Ticket est ON t.id_estado      = est.id_estado "
+                   + "INNER JOIN Dispositivo     d   ON t.id_dispositivo = d.id_dispositivo "
+                   + "INNER JOIN Ambito          a   ON t.id_ambito      = a.id_ambito "
+                   + "INNER JOIN Estado_Ticket   est ON t.id_estado      = est.id_estado "
+                   + "INNER JOIN Usuario_Cliente u   ON t.id_usuario     = u.id_usuario "
+                   + "INNER JOIN Sucursal        s   ON u.id_sucursal    = s.id_sucursal "
+                   + "LEFT  JOIN Empleado_Interno tec ON t.id_tecnico_asignado = tec.id_empleado "
                    + "WHERE d.numero_serie = ? "
                    + "ORDER BY t.fecha_hora_creacion DESC";
 
@@ -300,9 +310,13 @@ public class TicketDAO {
                     t.setIdEstado(rs.getInt("id_estado"));
                     t.setFechaHoraCreacion(rs.getString("fecha_hora_creacion"));
                     t.setFechaHoraCierre(rs.getString("fecha_hora_cierre"));
+                    t.setPrioridad(rs.getString("prioridad"));
                     t.setNombreAmbito(rs.getString("nombre_ambito"));
                     t.setNaturaleza(rs.getString("naturaleza"));
                     t.setNombreEstado(rs.getString("nombre_estado"));
+                    t.setNombreUsuario(rs.getString("reporta"));
+                    t.setNombreSucursal(rs.getString("nombre_sucursal"));
+                    t.setNombreTecnico(rs.getString("tecnico"));
                     t.setDescripcionProblema(rs.getString("descripcion_problema"));
                     t.setComentarioResolucion(rs.getString("comentario_resolucion"));
                     lista.add(t);
