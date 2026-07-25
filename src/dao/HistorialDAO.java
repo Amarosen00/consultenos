@@ -95,6 +95,48 @@ public class HistorialDAO {
         return lista;
     }
 
+    /**
+     * Historial de eventos de UN ticket especifico, para mostrarlo de solo
+     * lectura en vista/DetalleTicket.java (mencionado como opcional en
+     * docs/IMPLEMENTACION.md: "esta pantalla los MUESTRA, no los genera").
+     * A diferencia de buscar(), esta consulta es simple y no tiene filtros.
+     */
+    public List<HistorialTicket> listarPorTicket(int idTicket) {
+        List<HistorialTicket> lista = new ArrayList<>();
+
+        String sql = "SELECT h.id_historial, h.id_ticket, h.fecha_hora_accion, h.accion, "
+                   + "       emp.nombre_completo AS responsable, r.nombre_rol "
+                   + "FROM Historial_Ticket h "
+                   + "INNER JOIN Empleado_Interno emp ON h.id_empleado = emp.id_empleado "
+                   + "INNER JOIN Rol              r   ON emp.id_rol    = r.id_rol "
+                   + "WHERE h.id_ticket = ? "
+                   + "ORDER BY h.fecha_hora_accion";
+
+        try (Connection cn = Conexion.obtener();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+
+            ps.setInt(1, idTicket);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    HistorialTicket h = new HistorialTicket();
+                    h.setIdHistorial(rs.getInt("id_historial"));
+                    h.setIdTicket(rs.getInt("id_ticket"));
+                    h.setFechaHoraAccion(rs.getString("fecha_hora_accion"));
+                    h.setAccion(rs.getString("accion"));
+                    h.setNombreResponsable(rs.getString("responsable"));
+                    h.setNombreRolResponsable(rs.getString("nombre_rol"));
+                    lista.add(h);
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error al listar historial del ticket: " + e.getMessage());
+        }
+
+        return lista;
+    }
+
     /** Convierte cadenas vacias o solo espacios en null, para tratarlas como "sin filtro". */
     private static String vacioComoNulo(String s) {
         return (s == null || s.isBlank()) ? null : s.trim();
