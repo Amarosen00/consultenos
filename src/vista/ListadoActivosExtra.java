@@ -40,7 +40,7 @@ import modelo.Ticket;
  *
  * La vista NO sabe SQL: solo llama a TicketDAO y pinta lo que recibe.
  */
-public class ListadoActivosExtra extends JFrame {
+public class ListadoActivosExtra extends JFrame implements Refrescable {
 
     private static final String[] COLUMNAS = {
         "ID", "Reporta", "Ambito", "Prioridad", "Estado", "Tecnico", "Fecha creacion"
@@ -142,6 +142,12 @@ public class ListadoActivosExtra extends JFrame {
         for (EstadoTicket e : catalogoDAO.listarEstados()) {
             comboEstado.addItem(e);
         }
+    }
+
+    /** Recarga los datos cuando se reutiliza esta ventana desde el menu (ver Refrescable). */
+    @Override
+    public void refrescar() {
+        cargarTickets();
     }
 
     /** Trae los tickets activos desde el DAO y repinta la tabla completa. */

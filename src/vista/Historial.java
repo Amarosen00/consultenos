@@ -29,7 +29,7 @@ import modelo.HistorialTicket;
  *
  * La vista NO sabe SQL: solo llama a HistorialDAO/TicketDAO y pinta lo que recibe.
  */
-public class Historial extends JFrame {
+public class Historial extends JFrame implements Refrescable {
 
     private static final String[] COLUMNAS = {
         "Fecha y hora", "Ticket", "Accion", "Responsable", "Estado actual"
@@ -114,6 +114,12 @@ public class Historial extends JFrame {
         for (EstadoTicket e : catalogoDAO.listarEstados()) {
             comboEstado.addItem(e.getNombreEstado());
         }
+    }
+
+    /** Recarga los datos cuando se reutiliza esta ventana desde el menu (ver Refrescable). */
+    @Override
+    public void refrescar() {
+        buscar();
     }
 
     private void buscar() {

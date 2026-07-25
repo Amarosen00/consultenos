@@ -18,7 +18,7 @@ import modelo.Empleado;
  * Reutiliza EmpleadoDAO.listarTodos(), que ya existe y esta probado; esta
  * pantalla solo lo muestra en una tabla, no agrega SQL nuevo.
  */
-public class GestionPersonal extends JFrame {
+public class GestionPersonal extends JFrame implements Refrescable {
 
     private static final String[] COLUMNAS = {"ID", "Nombre completo", "Usuario", "Rol", "Activo"};
 
@@ -51,6 +51,12 @@ public class GestionPersonal extends JFrame {
         JTable tabla = new JTable(modeloTabla);
         tabla.setRowHeight(24);
         add(new JScrollPane(tabla), BorderLayout.CENTER);
+    }
+
+    /** Recarga los datos cuando se reutiliza esta ventana desde el menu (ver Refrescable). */
+    @Override
+    public void refrescar() {
+        cargarPersonal();
     }
 
     private void cargarPersonal() {

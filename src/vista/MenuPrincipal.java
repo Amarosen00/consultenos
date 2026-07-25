@@ -148,10 +148,18 @@ public class MenuPrincipal extends JFrame {
      * Abre una pantalla nueva, o enfoca la que ya estaba abierta con esa
      * clave en vez de crear otra encima. "isDisplayable()" es false una vez
      * que la ventana se dispose() (se cerro), asi que ahi si se crea una nueva.
+     *
+     * Si la ventana reutilizada implementa Refrescable, se le pide refrescar
+     * datos antes de enfocarla: si no, quedaria mostrando lo que tenia
+     * cargado la primera vez que se abrio (ej. Historial no mostraria un
+     * cambio de estado hecho despues, en otra pantalla).
      */
     private void abrirOEnfocar(String clave, Supplier<JFrame> creador) {
         JFrame existente = ventanasAbiertas.get(clave);
         if (existente != null && existente.isDisplayable()) {
+            if (existente instanceof Refrescable) {
+                ((Refrescable) existente).refrescar();
+            }
             existente.toFront();
             existente.requestFocus();
             return;

@@ -34,7 +34,7 @@ import modelo.Ticket;
  * (HistorialDAO.listarPorTicket) — es opcional segun el documento: esta
  * pantalla los MUESTRA, no los genera.
  */
-public class DetalleTicket extends JFrame {
+public class DetalleTicket extends JFrame implements Refrescable {
 
     private static final String ROL_TECNICO = "Tecnico";
     private static final String[] COLUMNAS_HISTORIAL = {"Fecha", "Responsable", "Accion"};
@@ -58,6 +58,12 @@ public class DetalleTicket extends JFrame {
         setSize(650, 700);
         setLocationRelativeTo(null);
 
+        cargarYMostrar();
+    }
+
+    /** Recarga los datos cuando se reutiliza esta ventana (ver Refrescable). */
+    @Override
+    public void refrescar() {
         cargarYMostrar();
     }
 

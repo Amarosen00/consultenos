@@ -25,7 +25,7 @@ import modelo.ResumenMTTR;
  * todos de solo lectura, usando las consultas ya escritas y probadas en
  * sql/02_consultas_consultenos.sql (seccion HU-11) a traves de ReporteDAO.
  */
-public class Reportes extends JFrame {
+public class Reportes extends JFrame implements Refrescable {
 
     private final ReporteDAO reporteDAO = new ReporteDAO();
 
@@ -118,6 +118,12 @@ public class Reportes extends JFrame {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(new JScrollPane(tabla), BorderLayout.CENTER);
         return panel;
+    }
+
+    /** Recarga los datos cuando se reutiliza esta ventana desde el menu (ver Refrescable). */
+    @Override
+    public void refrescar() {
+        cargarTodo();
     }
 
     /** Vuelve a ejecutar las 4 consultas y repinta cada pestaña. */

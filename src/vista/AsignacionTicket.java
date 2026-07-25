@@ -38,7 +38,7 @@ import modelo.Ticket;
  * bandeja "Mis Tickets Asignados" (ListadoTickets en modo Tecnico) la
  * proxima vez que la abra. No se envia correo ni aviso emergente.
  */
-public class AsignacionTicket extends JFrame {
+public class AsignacionTicket extends JFrame implements Refrescable {
 
     private static final String[] COLUMNAS = {
         "ID", "Fecha creacion", "Prioridad", "Ambito", "Reporta", "Sucursal", "Descripcion"
@@ -111,6 +111,12 @@ public class AsignacionTicket extends JFrame {
         panelInferior.add(btnAsignar);
         panelInferior.add(btnActualizar);
         add(panelInferior, BorderLayout.SOUTH);
+    }
+
+    /** Recarga los datos cuando se reutiliza esta ventana desde el menu (ver Refrescable). */
+    @Override
+    public void refrescar() {
+        cargarTickets();
     }
 
     /** Trae los tickets Abierto sin tecnico y repinta la tabla completa. */

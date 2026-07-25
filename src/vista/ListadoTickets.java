@@ -52,7 +52,7 @@ import modelo.Ticket;
  * Doble clic en una fila abre DetalleTicket (HU-03); al cerrar ese detalle
  * se recarga el listado, por si el estado del ticket cambio.
  */
-public class ListadoTickets extends JFrame {
+public class ListadoTickets extends JFrame implements Refrescable {
 
     private static final String[] COLUMNAS = {
         "ID", "Fecha creacion", "Estado", "Prioridad", "Ambito", "Reporta", "Sucursal", "Tecnico"
@@ -209,6 +209,12 @@ public class ListadoTickets extends JFrame {
         cargarTickets();
     }
 
+    /** Recarga los datos cuando se reutiliza esta ventana desde el menu (ver Refrescable). */
+    @Override
+    public void refrescar() {
+        cargarTickets();
+    }
+
     /** Trae los tickets (bandeja del tecnico, o resultado de los filtros) y repinta la tabla. */
     private void cargarTickets() {
         ticketsMostrados = esTecnico ? ticketDAO.listarPorTecnico(idEmpleadoLogueado) : buscarConFiltros();
@@ -288,6 +294,7 @@ public class ListadoTickets extends JFrame {
 
         DetalleTicket existente = detallesAbiertos.get(idTicket);
         if (existente != null && existente.isDisplayable()) {
+            existente.refrescar();
             existente.toFront();
             existente.requestFocus();
             return;
