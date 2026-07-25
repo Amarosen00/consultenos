@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -52,7 +51,6 @@ public class AsignacionTicket extends JFrame {
     private static final Color COLOR_MEDIA_TEXTO = new Color(0x8D, 0x6E, 0x00);
     private static final Color COLOR_BAJA_FONDO  = new Color(0xC8, 0xE6, 0xC9);
     private static final Color COLOR_BAJA_TEXTO  = new Color(0x1B, 0x5E, 0x20);
-    private static final Color COLOR_NAVY_INACAP = new Color(0x1F, 0x38, 0x64);
 
     private final TicketDAO   ticketDAO   = new TicketDAO();
     private final EmpleadoDAO empleadoDAO = new EmpleadoDAO();
@@ -79,9 +77,7 @@ public class AsignacionTicket extends JFrame {
     private void construirInterfaz() {
         setLayout(new BorderLayout(8, 8));
 
-        JLabel lblTitulo = new JLabel("Tickets abiertos sin asignar");
-        lblTitulo.setFont(lblTitulo.getFont().deriveFont(Font.BOLD, 16f));
-        lblTitulo.setForeground(COLOR_NAVY_INACAP);
+        JLabel lblTitulo = EstilosUI.titulo("Tickets abiertos sin asignar", 16f);
         lblTitulo.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
         add(lblTitulo, BorderLayout.NORTH);
 
@@ -103,10 +99,10 @@ public class AsignacionTicket extends JFrame {
         lblSeleccion = new JLabel("Seleccione un ticket de la tabla para asignarle un tecnico.");
         comboTecnico = new JComboBox<>();
         comboTecnico.setEnabled(false);
-        btnAsignar = new JButton("Asignar Tecnico");
+        btnAsignar = EstilosUI.botonPrimario("Asignar Tecnico");
         btnAsignar.setEnabled(false);
         btnAsignar.addActionListener(e -> asignar());
-        btnActualizar = new JButton("Actualizar listado");
+        btnActualizar = EstilosUI.botonSecundario("Actualizar listado");
         btnActualizar.addActionListener(e -> cargarTickets());
 
         panelInferior.add(lblSeleccion);

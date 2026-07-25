@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -63,8 +62,6 @@ public class ListadoActivosExtra extends JFrame {
     private static final Color COLOR_EN_PROGRESO_FONDO = new Color(0xBB, 0xDE, 0xFB);
     private static final Color COLOR_EN_PROGRESO_TEXTO = new Color(0x0D, 0x47, 0xA1);
 
-    private static final Color COLOR_NAVY_INACAP = new Color(0x1F, 0x38, 0x64);
-
     private final TicketDAO ticketDAO = new TicketDAO();
     private final CatalogoDAO catalogoDAO = new CatalogoDAO(); // solo se usa listarEstados(), vive alli para no duplicar la consulta
 
@@ -100,9 +97,7 @@ public class ListadoActivosExtra extends JFrame {
     private void construirInterfaz() {
         setLayout(new BorderLayout(8, 8));
 
-        JLabel lblTitulo = new JLabel("Tickets activos (Abierto / En progreso)");
-        lblTitulo.setFont(lblTitulo.getFont().deriveFont(Font.BOLD, 16f));
-        lblTitulo.setForeground(COLOR_NAVY_INACAP);
+        JLabel lblTitulo = EstilosUI.titulo("Tickets activos (Abierto / En progreso)", 16f);
         lblTitulo.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
         add(lblTitulo, BorderLayout.NORTH);
 
@@ -127,10 +122,10 @@ public class ListadoActivosExtra extends JFrame {
         lblSeleccion = new JLabel("Seleccione un ticket de la tabla para cambiar su estado.");
         comboEstado = new JComboBox<>();
         comboEstado.setEnabled(false);
-        btnAplicar = new JButton("Aplicar cambio de estado");
+        btnAplicar = EstilosUI.botonPrimario("Aplicar cambio de estado");
         btnAplicar.setEnabled(false);
         btnAplicar.addActionListener(e -> aplicarCambioEstado());
-        btnActualizar = new JButton("Actualizar listado");
+        btnActualizar = EstilosUI.botonSecundario("Actualizar listado");
         btnActualizar.addActionListener(e -> cargarTickets());
 
         panelInferior.add(lblSeleccion);

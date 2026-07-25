@@ -4,12 +4,13 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -79,8 +80,6 @@ public class ListadoTickets extends JFrame {
     private static final Color COLOR_CERRADO_FONDO     = new Color(0xE0, 0xE0, 0xE0);
     private static final Color COLOR_CERRADO_TEXTO     = new Color(0x42, 0x42, 0x42);
 
-    private static final Color COLOR_NAVY_INACAP = new Color(0x1F, 0x38, 0x64);
-
     private final TicketDAO    ticketDAO    = new TicketDAO();
     private final CatalogoDAO  catalogoDAO  = new CatalogoDAO();
 
@@ -89,6 +88,10 @@ public class ListadoTickets extends JFrame {
     private final boolean esTecnico;
 
     private List<Ticket> ticketsMostrados;
+
+    // Un DetalleTicket abierto por id de ticket: si ya esta abierto, un
+    // segundo doble clic lo enfoca en vez de abrir otro encima.
+    private final Map<Integer, DetalleTicket> detallesAbiertos = new HashMap<>();
 
     private JTable tabla;
     private DefaultTableModel modeloTabla;
@@ -119,9 +122,8 @@ public class ListadoTickets extends JFrame {
 
         JPanel panelSuperior = new JPanel(new BorderLayout());
 
-        JLabel lblTitulo = new JLabel(esTecnico ? "Mis tickets asignados (Abierto / En progreso)" : "Listado de tickets");
-        lblTitulo.setFont(lblTitulo.getFont().deriveFont(Font.BOLD, 16f));
-        lblTitulo.setForeground(COLOR_NAVY_INACAP);
+        JLabel lblTitulo = EstilosUI.titulo(
+                esTecnico ? "Mis tickets asignados (Abierto / En progreso)" : "Listado de tickets", 16f);
         lblTitulo.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
         panelSuperior.add(lblTitulo, BorderLayout.NORTH);
 
@@ -134,9 +136,9 @@ public class ListadoTickets extends JFrame {
             txtNumeroSerie = new JTextField(12);
             txtNumeroSerie.setToolTipText("Numero de serie del dispositivo (HU-07)");
 
-            JButton btnBuscar = new JButton("Buscar");
+            JButton btnBuscar = EstilosUI.botonPrimario("Buscar");
             btnBuscar.addActionListener(e -> cargarTickets());
-            JButton btnLimpiar = new JButton("Limpiar filtros");
+            JButton btnLimpiar = EstilosUI.botonSecundario("Limpiar filtros");
             btnLimpiar.addActionListener(e -> limpiarFiltros());
 
             panelFiltros.add(new JLabel("Estado:"));
@@ -176,7 +178,7 @@ public class ListadoTickets extends JFrame {
         });
         add(new JScrollPane(tabla), BorderLayout.CENTER);
 
-        JButton btnActualizar = new JButton("Actualizar");
+        JButton btnActualizar = EstilosUI.botonSecundario("Actualizar");
         btnActualizar.addActionListener(e -> cargarTickets());
         JPanel panelInferior = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         panelInferior.add(new JLabel("Doble clic en una fila para ver el detalle."));
@@ -269,7 +271,12 @@ public class ListadoTickets extends JFrame {
         return resultado;
     }
 
-    /** Abre el detalle del ticket seleccionado; al cerrarlo, recarga el listado por si cambio de estado. */
+    /**
+     * Abre el detalle del ticket seleccionado, o enfoca el que ya estuviera
+     * abierto para ESE ticket; al cerrarlo, recarga el listado por si el
+     * estado cambio. Tickets distintos si pueden tener su propia ventana
+     * abierta al mismo tiempo (son "documentos" distintos).
+     */
     private void abrirDetalle() {
         int fila = tabla.getSelectedRow();
         if (fila < 0) {
@@ -277,13 +284,24 @@ public class ListadoTickets extends JFrame {
         }
 
         Ticket seleccionado = ticketsMostrados.get(fila);
-        DetalleTicket detalle = new DetalleTicket(seleccionado.getIdTicket(), idEmpleadoLogueado, rolLogueado);
+        int idTicket = seleccionado.getIdTicket();
+
+        DetalleTicket existente = detallesAbiertos.get(idTicket);
+        if (existente != null && existente.isDisplayable()) {
+            existente.toFront();
+            existente.requestFocus();
+            return;
+        }
+
+        DetalleTicket detalle = new DetalleTicket(idTicket, idEmpleadoLogueado, rolLogueado);
         detalle.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
+                detallesAbiertos.remove(idTicket);
                 cargarTickets();
             }
         });
+        detallesAbiertos.put(idTicket, detalle);
         detalle.setVisible(true);
     }
 

@@ -1,7 +1,6 @@
 package vista;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
 import javax.swing.BorderFactory;
@@ -28,8 +27,6 @@ import modelo.ResumenMTTR;
  */
 public class Reportes extends JFrame {
 
-    private static final Color COLOR_NAVY_INACAP = new Color(0x1F, 0x38, 0x64);
-
     private final ReporteDAO reporteDAO = new ReporteDAO();
 
     private DefaultTableModel modeloEstado;
@@ -51,9 +48,7 @@ public class Reportes extends JFrame {
     private void construirInterfaz() {
         setLayout(new BorderLayout(8, 8));
 
-        JLabel lblTitulo = new JLabel("Reportes de gestion");
-        lblTitulo.setFont(lblTitulo.getFont().deriveFont(Font.BOLD, 16f));
-        lblTitulo.setForeground(COLOR_NAVY_INACAP);
+        JLabel lblTitulo = EstilosUI.titulo("Reportes de gestion", 16f);
         lblTitulo.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
         add(lblTitulo, BorderLayout.NORTH);
 
@@ -64,7 +59,7 @@ public class Reportes extends JFrame {
         tabs.addTab("Por Ambito", construirTabAmbito());
         add(tabs, BorderLayout.CENTER);
 
-        JButton btnActualizar = new JButton("Actualizar reportes");
+        JButton btnActualizar = EstilosUI.botonSecundario("Actualizar reportes");
         btnActualizar.addActionListener(e -> cargarTodo());
         JPanel panelInferior = new JPanel();
         panelInferior.add(btnActualizar);
@@ -101,7 +96,7 @@ public class Reportes extends JFrame {
 
         lblHorasPromedio = new JLabel("-", SwingConstants.CENTER);
         lblHorasPromedio.setFont(lblHorasPromedio.getFont().deriveFont(Font.BOLD, 28f));
-        lblHorasPromedio.setForeground(COLOR_NAVY_INACAP);
+        lblHorasPromedio.setForeground(EstilosUI.NAVY_INACAP);
 
         lblTicketsConsiderados = new JLabel("-", SwingConstants.CENTER);
 

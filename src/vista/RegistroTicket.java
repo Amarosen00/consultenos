@@ -1,8 +1,6 @@
 package vista;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -45,8 +43,6 @@ import modelo.Usuario;
  */
 public class RegistroTicket extends JFrame {
 
-    private static final Color COLOR_NAVY_INACAP = new Color(0x1F, 0x38, 0x64);
-    private static final Color COLOR_ROJO_INACAP  = new Color(0xE3, 0x05, 0x14);
     private static final String[] PRIORIDADES  = {"Alta", "Media", "Baja"};
     private static final String[] NATURALEZAS  = {"Fisica", "Logica"};
 
@@ -88,9 +84,7 @@ public class RegistroTicket extends JFrame {
     private void construirInterfaz() {
         setLayout(new BorderLayout(8, 8));
 
-        JLabel lblTitulo = new JLabel("Registro de Ticket (llamada telefonica)");
-        lblTitulo.setFont(lblTitulo.getFont().deriveFont(Font.BOLD, 16f));
-        lblTitulo.setForeground(COLOR_NAVY_INACAP);
+        JLabel lblTitulo = EstilosUI.titulo("Registro de Ticket (llamada telefonica)", 16f);
         lblTitulo.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
         add(lblTitulo, BorderLayout.NORTH);
 
@@ -103,7 +97,7 @@ public class RegistroTicket extends JFrame {
 
         txtCodigoUsuario = new JTextField();
         txtCodigoUsuario.addActionListener(e -> autocompletarUsuario()); // Enter tambien busca
-        btnBuscarUsuario = new JButton("Buscar");
+        btnBuscarUsuario = EstilosUI.botonSecundario("Buscar");
         btnBuscarUsuario.addActionListener(e -> autocompletarUsuario());
 
         JPanel panelCodigo = new JPanel(new BorderLayout(5, 0));
@@ -112,7 +106,7 @@ public class RegistroTicket extends JFrame {
         agregarFila(panelFormulario, gbc, fila++, "Codigo de usuario:", panelCodigo);
 
         lblDatosUsuario = new JLabel(" ");
-        lblDatosUsuario.setForeground(COLOR_ROJO_INACAP);
+        lblDatosUsuario.setForeground(EstilosUI.ROJO_INACAP);
         gbc.gridx = 1; gbc.gridy = fila++; gbc.weightx = 1;
         panelFormulario.add(lblDatosUsuario, gbc);
 
@@ -143,7 +137,7 @@ public class RegistroTicket extends JFrame {
 
         add(panelFormulario, BorderLayout.CENTER);
 
-        btnRegistrar = new JButton("Registrar Ticket");
+        btnRegistrar = EstilosUI.botonPrimario("Registrar Ticket");
         btnRegistrar.addActionListener(e -> registrar());
         JPanel panelInferior = new JPanel();
         panelInferior.setBorder(BorderFactory.createEmptyBorder(0, 20, 15, 20));
@@ -185,7 +179,7 @@ public class RegistroTicket extends JFrame {
             return;
         }
 
-        lblDatosUsuario.setForeground(COLOR_NAVY_INACAP);
+        lblDatosUsuario.setForeground(EstilosUI.NAVY_INACAP);
         lblDatosUsuario.setText(usuarioEncontrado.getNombreCompleto()
                 + " - " + usuarioEncontrado.getNombreSucursal()
                 + " (" + usuarioEncontrado.getRazonSocial() + ")");

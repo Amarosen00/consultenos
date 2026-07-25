@@ -1,8 +1,6 @@
 package vista;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -23,7 +21,6 @@ import modelo.Empleado;
 public class GestionPersonal extends JFrame {
 
     private static final String[] COLUMNAS = {"ID", "Nombre completo", "Usuario", "Rol", "Activo"};
-    private static final Color COLOR_NAVY_INACAP = new Color(0x1F, 0x38, 0x64);
 
     private final EmpleadoDAO empleadoDAO = new EmpleadoDAO();
     private DefaultTableModel modeloTabla;
@@ -41,9 +38,7 @@ public class GestionPersonal extends JFrame {
     private void construirInterfaz() {
         setLayout(new BorderLayout(8, 8));
 
-        JLabel lblTitulo = new JLabel("Personal interno (solo lectura)");
-        lblTitulo.setFont(lblTitulo.getFont().deriveFont(Font.BOLD, 16f));
-        lblTitulo.setForeground(COLOR_NAVY_INACAP);
+        JLabel lblTitulo = EstilosUI.titulo("Personal interno (solo lectura)", 16f);
         lblTitulo.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
         add(lblTitulo, BorderLayout.NORTH);
 

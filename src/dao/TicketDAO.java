@@ -91,7 +91,12 @@ public class TicketDAO {
         String sqlHistorial = "INSERT INTO Historial_Ticket (id_ticket, id_empleado, accion) "
                              + "VALUES (?, ?, ?)";
 
-        try (Connection cn = Conexion.obtener()) {
+        // Connection fuera del try-with-resources: si el INSERT falla despues
+        // del UPDATE, el catch necesita la misma conexion para poder hacer
+        // rollback() antes de cerrarla (el finally la cierra siempre).
+        Connection cn = null;
+        try {
+            cn = Conexion.obtener();
             cn.setAutoCommit(false);
 
             try (PreparedStatement psUpdate = cn.prepareStatement(sqlUpdate)) {
@@ -112,7 +117,17 @@ public class TicketDAO {
 
         } catch (SQLException e) {
             System.err.println("Error al cambiar estado del ticket: " + e.getMessage());
+            if (cn != null) {
+                try {
+                    cn.rollback();
+                } catch (SQLException ex) {
+                    System.err.println("Error al revertir la transaccion: " + ex.getMessage());
+                }
+            }
             return false;
+
+        } finally {
+            Conexion.cerrar(cn);
         }
     }
 

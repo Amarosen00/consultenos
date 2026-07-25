@@ -1,8 +1,6 @@
 package vista;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -38,7 +36,6 @@ import modelo.Ticket;
  */
 public class DetalleTicket extends JFrame {
 
-    private static final Color COLOR_NAVY_INACAP = new Color(0x1F, 0x38, 0x64);
     private static final String ROL_TECNICO = "Tecnico";
     private static final String[] COLUMNAS_HISTORIAL = {"Fecha", "Responsable", "Accion"};
 
@@ -83,9 +80,7 @@ public class DetalleTicket extends JFrame {
     private void construirInterfaz() {
         setLayout(new BorderLayout(8, 8));
 
-        JLabel lblTitulo = new JLabel("Ticket #" + ticket.getIdTicket() + " - " + ticket.getNombreEstado());
-        lblTitulo.setFont(lblTitulo.getFont().deriveFont(Font.BOLD, 16f));
-        lblTitulo.setForeground(COLOR_NAVY_INACAP);
+        JLabel lblTitulo = EstilosUI.titulo("Ticket #" + ticket.getIdTicket() + " - " + ticket.getNombreEstado(), 16f);
         lblTitulo.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
         add(lblTitulo, BorderLayout.NORTH);
 
@@ -169,7 +164,7 @@ public class DetalleTicket extends JFrame {
             txtComentario.setWrapStyleWord(true);
             panelResolver.add(new JScrollPane(txtComentario), BorderLayout.CENTER);
 
-            JButton btnResolver = new JButton("Marcar como Resuelto");
+            JButton btnResolver = EstilosUI.botonPrimario("Marcar como Resuelto");
             btnResolver.addActionListener(e -> resolver(txtComentario.getText().trim()));
             JPanel panelBoton = new JPanel();
             panelBoton.add(btnResolver);
@@ -177,7 +172,7 @@ public class DetalleTicket extends JFrame {
 
             panelSur.add(panelResolver, BorderLayout.NORTH);
         } else if (puedeCerrar) {
-            JButton btnCerrar = new JButton("Cerrar Ticket");
+            JButton btnCerrar = EstilosUI.botonPrimario("Cerrar Ticket");
             btnCerrar.addActionListener(e -> cerrar());
             JPanel panelBoton = new JPanel();
             panelBoton.add(btnCerrar);

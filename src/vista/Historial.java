@@ -1,9 +1,7 @@
 package vista;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -37,7 +35,6 @@ public class Historial extends JFrame {
         "Fecha y hora", "Ticket", "Accion", "Responsable", "Estado actual"
     };
     private static final String OPCION_TODOS = "Todos";
-    private static final Color  COLOR_NAVY_INACAP = new Color(0x1F, 0x38, 0x64);
 
     private final HistorialDAO historialDAO = new HistorialDAO();
     private final CatalogoDAO  catalogoDAO  = new CatalogoDAO(); // solo se usa listarEstados(), para no duplicar esa consulta
@@ -64,9 +61,7 @@ public class Historial extends JFrame {
     private void construirInterfaz() {
         setLayout(new BorderLayout(8, 8));
 
-        JLabel lblTitulo = new JLabel("Historial y busqueda");
-        lblTitulo.setFont(lblTitulo.getFont().deriveFont(Font.BOLD, 16f));
-        lblTitulo.setForeground(COLOR_NAVY_INACAP);
+        JLabel lblTitulo = EstilosUI.titulo("Historial y busqueda", 16f);
         lblTitulo.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
         add(lblTitulo, BorderLayout.NORTH);
 
@@ -79,9 +74,9 @@ public class Historial extends JFrame {
         txtDesde.setToolTipText("Formato: yyyy-MM-dd (ejemplo: 2026-07-01)");
         txtHasta.setToolTipText("Formato: yyyy-MM-dd (ejemplo: 2026-07-31)");
 
-        JButton btnBuscar = new JButton("Buscar");
+        JButton btnBuscar = EstilosUI.botonPrimario("Buscar");
         btnBuscar.addActionListener(e -> buscar());
-        JButton btnLimpiar = new JButton("Limpiar filtros");
+        JButton btnLimpiar = EstilosUI.botonSecundario("Limpiar filtros");
         btnLimpiar.addActionListener(e -> limpiarFiltros());
 
         panelFiltros.add(new JLabel("Texto:"));
