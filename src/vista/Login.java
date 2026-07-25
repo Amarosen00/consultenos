@@ -1,7 +1,6 @@
 package vista;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -16,6 +15,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import com.formdev.flatlaf.FlatLightLaf;
 import dao.EmpleadoDAO;
 import modelo.Empleado;
 
@@ -29,9 +29,6 @@ import modelo.Empleado;
  */
 public class Login extends JFrame {
 
-    private static final Color COLOR_NAVY_INACAP = new Color(0x1F, 0x38, 0x64);
-    private static final Color COLOR_ROJO_INACAP  = new Color(0xE3, 0x05, 0x14);
-
     private final EmpleadoDAO empleadoDAO = new EmpleadoDAO();
 
     private JTextField     txtUsuario;
@@ -40,7 +37,7 @@ public class Login extends JFrame {
     public Login() {
         setTitle("Consultenos - Ingreso");
         setDefaultCloseOperation(EXIT_ON_CLOSE); // cerrar el login sin ingresar termina la aplicacion
-        setSize(380, 280);
+        setSize(400, 320);
         setLocationRelativeTo(null);
         setResizable(false);
 
@@ -50,11 +47,10 @@ public class Login extends JFrame {
     private void construirInterfaz() {
         setLayout(new BorderLayout(10, 10));
 
-        JLabel lblTitulo = new JLabel("Consultenos", SwingConstants.CENTER);
-        lblTitulo.setFont(lblTitulo.getFont().deriveFont(Font.BOLD, 22f));
-        lblTitulo.setForeground(COLOR_NAVY_INACAP);
-        JLabel lblSubtitulo = new JLabel("Mesa de ayuda - Ingreso de personal", SwingConstants.CENTER);
-        lblSubtitulo.setForeground(COLOR_ROJO_INACAP);
+        JLabel lblTitulo = EstilosUI.titulo("Consultenos", 22f);
+        lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+        JLabel lblSubtitulo = EstilosUI.textoSuave("Mesa de ayuda - Ingreso de personal");
+        lblSubtitulo.setHorizontalAlignment(SwingConstants.CENTER);
 
         JPanel panelTitulo = new JPanel(new BorderLayout());
         panelTitulo.setBorder(BorderFactory.createEmptyBorder(20, 10, 0, 10));
@@ -89,7 +85,7 @@ public class Login extends JFrame {
         JPanel panelInferior = new JPanel(new BorderLayout(5, 5));
         panelInferior.setBorder(BorderFactory.createEmptyBorder(10, 30, 15, 30));
 
-        JButton btnIngresar = new JButton("Ingresar");
+        JButton btnIngresar = EstilosUI.botonPrimario("Ingresar");
         btnIngresar.addActionListener(e -> intentarLogin());
 
         panelInferior.add(btnIngresar, BorderLayout.SOUTH);
@@ -124,8 +120,14 @@ public class Login extends JFrame {
 
     // ======================================================================
     //  PUNTO DE ENTRADA DE LA APLICACION
+    //  FlatLightLaf.setup() activa el look and feel moderno (FlatLaf,
+    //  lib/flatlaf-3.5.4.jar) para TODA la aplicacion: como Login es la
+    //  primera ventana que se crea, aqui es donde se activa antes de
+    //  construir cualquier componente Swing.
     // ======================================================================
     public static void main(String[] args) {
+        FlatLightLaf.setup();
+        EstilosUI.configurarGlobal();
         SwingUtilities.invokeLater(() -> new Login().setVisible(true));
     }
 }
