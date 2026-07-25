@@ -338,7 +338,7 @@ public class TicketDAO {
     public List<Ticket> listarAbiertosSinAsignar() {
         List<Ticket> lista = new ArrayList<>();
 
-        String sql = "SELECT t.id_ticket, t.id_estado, t.fecha_hora_creacion, t.prioridad, "
+        String sql = "SELECT t.id_ticket, t.id_estado, t.id_ambito, t.fecha_hora_creacion, t.prioridad, "
                    + "       est.nombre_estado, a.nombre_ambito, "
                    + "       u.nombre_completo AS reporta, s.nombre_sucursal, "
                    + "       t.descripcion_problema "
@@ -359,6 +359,7 @@ public class TicketDAO {
                 Ticket t = new Ticket();
                 t.setIdTicket(rs.getInt("id_ticket"));
                 t.setIdEstado(rs.getInt("id_estado"));
+                t.setIdAmbito(rs.getInt("id_ambito"));
                 t.setFechaHoraCreacion(rs.getString("fecha_hora_creacion"));
                 t.setPrioridad(rs.getString("prioridad"));
                 t.setNombreEstado(rs.getString("nombre_estado"));
