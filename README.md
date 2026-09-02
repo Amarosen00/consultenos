@@ -135,8 +135,8 @@ Después se crea un *Pull Request* en GitHub para integrar a `main`.
 | Hito | Descripción | Estado |
 |---|---|---|
 | 1 | Base de datos y ruteo de funciones | Completado |
-| 2 | Construcción del sistema | En curso |
-| 3 | Ejecución del guion y entrega | Pendiente |
+| 2 | Construcción del sistema | Completado |
+| 3 | Ejecución del guion y entrega | Completado |
 
 ---
 
